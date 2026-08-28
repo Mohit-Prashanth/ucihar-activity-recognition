@@ -1,0 +1,7 @@
+.ipynb_checkpoints/
+.zen/
+mlruns/
+mlflow.db
+__pycache__/
+anaconda_projects/
+UCI dataset - Human Activity Recognition with Smartphones/
