@@ -12,7 +12,7 @@ performance, and serving the trained model through an MLflow prediction service.
 
 
 
-The project uses \*\*ZenML\*\* to orchestrate the machine-learning workflow and \*\*MLflow\*\* for experiment tracking, model deployment, and model serving.
+The project uses **ZenML** to orchestrate the machine-learning workflow and **ZenML** for experiment tracking, model deployment, and model serving.
 
 
 
