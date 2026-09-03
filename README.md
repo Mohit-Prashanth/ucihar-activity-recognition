@@ -12,197 +12,73 @@ performance, and serving the trained model through an MLflow prediction service.
 
 
 
+The project uses \*\*ZenML\*\* to orchestrate the machine-learning workflow and \*\*MLflow\*\* for experiment tracking, model deployment, and model serving.
 
 
-&#x20;                UCI HAR Dataset
 
-&#x20;                      |
+1\. \*\*Data Ingestion\*\*
 
-&#x20;                      v
+&#x20;  The UCI Human Activity Recognition dataset is loaded into the ZenML pipeline using `ingest\_data\_using\_path`.
 
-&#x20;             +------------------+
 
-&#x20;             |   Data Ingestion |
 
-&#x20;             |      ZenML       |
+2\. \*\*Data Cleaning and Preprocessing\*\*
 
-&#x20;             +------------------+
+&#x20;  The ingested data is cleaned and prepared for modeling using `clean\_data\_after\_ingestion`.
 
-&#x20;                      |
 
-&#x20;                      v
 
-&#x20;             +------------------+
+3\. \*\*Train/Validation Split\*\*
 
-&#x20;             | Data Cleaning \&  |
+&#x20;  The processed dataset is divided into training and validation sets: `X\_train`, `X\_valid`, `y\_train`, and `y\_valid`.
 
-&#x20;             |  Preprocessing   |
 
-&#x20;             +------------------+
 
-&#x20;                      |
+4\. \*\*Model Training\*\*
 
-&#x20;                      v
+&#x20;  A classification model is trained using `train\_model\_after\_cleaning`. The current implementation uses Logistic Regression.
 
-&#x20;             +------------------+
 
-&#x20;             | Train / Validation|
 
-&#x20;             |      Split       |
+5\. \*\*MLflow Experiment Tracking\*\*
 
-&#x20;             +------------------+
+&#x20;  Training runs are tracked with MLflow. Model parameters, evaluation metrics, artifacts, and run metadata are recorded for reproducibility and experiment comparison.
 
-&#x20;                      |
 
-&#x20;                      v
 
-&#x20;             +------------------+
+6\. \*\*Model Evaluation\*\*
 
-&#x20;             |   Model Training |
+&#x20;  The trained model is evaluated on the validation dataset using `evaluate\_model\_after\_training`. Classification metrics are used to assess model performance.
 
-&#x20;             | Logistic Regression
 
-&#x20;             +------------------+
 
-&#x20;                      |
+7\. \*\*Deployment Decision\*\*
 
-&#x20;                      +----------------------+
+&#x20;  The pipeline checks whether the trained model satisfies the configured deployment criteria. If the criteria are not met, deployment is skipped.
 
-&#x20;                      |                      |
 
-&#x20;                      |                      v
 
-&#x20;                      |            +----------------------+
+8\. \*\*Model Deployment\*\*
 
-&#x20;                      |            | MLflow Experiment    |
+&#x20;  If the model satisfies the deployment criteria, ZenML triggers `mlflow\_model\_deployer\_step` to deploy the model through MLflow.
 
-&#x20;                      |            | Tracking             |
 
-&#x20;                      |            |                      |
 
-&#x20;                      |            | - Parameters         |
+9\. \*\*MLflow Model Server\*\*
 
-&#x20;                      |            | - Metrics            |
+&#x20;  MLflow starts or reuses a model-serving service and exposes the deployed model through a prediction endpoint.
 
-&#x20;                      |            | - Model artifacts    |
 
-&#x20;                      |            | - Run metadata       |
 
-&#x20;                      |            +----------------------+
+10\. \*\*Inference\*\*
 
-&#x20;                      |
+&#x20;   New or test data is prepared using the same preprocessing logic used during training and sent to the MLflow `/invocations` endpoint.
 
-&#x20;                      v
 
-&#x20;             +------------------+
 
-&#x20;             | Model Evaluation |
+11\. \*\*Prediction Output\*\*
 
-&#x20;             +------------------+
+&#x20;   The deployed model returns a predicted human-activity class, such as walking, sitting, standing, or laying.
 
-&#x20;                      |
 
-&#x20;                      v
-
-&#x20;             +-----------------------+
-
-&#x20;             | Meets Deployment      |
-
-&#x20;             | Criteria?             |
-
-&#x20;             +-----------------------+
-
-&#x20;                 |               |
-
-&#x20;                No              Yes
-
-&#x20;                 |               |
-
-&#x20;                 v               v
-
-&#x20;         +---------------+   +----------------------+
-
-&#x20;         | Stop / Do Not |   | Deploy Model         |
-
-&#x20;         |    Deploy     |   | ZenML + MLflow       |
-
-&#x20;         +---------------+   +----------------------+
-
-&#x20;                                     |
-
-&#x20;                                     v
-
-&#x20;                             +----------------------+
-
-&#x20;                             | MLflow Model Server  |
-
-&#x20;                             +----------------------+
-
-&#x20;                                     |
-
-&#x20;                                     v
-
-&#x20;                             +----------------------+
-
-&#x20;                             | REST Prediction      |
-
-&#x20;                             | Endpoint             |
-
-&#x20;                             | /invocations         |
-
-&#x20;                             +----------------------+
-
-&#x20;                                     |
-
-&#x20;                                     v
-
-&#x20;                             +----------------------+
-
-&#x20;                             | Load New / Test Data |
-
-&#x20;                             +----------------------+
-
-&#x20;                                     |
-
-&#x20;                                     v
-
-&#x20;                             +----------------------+
-
-&#x20;                             | Apply Preprocessing  |
-
-&#x20;                             +----------------------+
-
-&#x20;                                     |
-
-&#x20;                                     v
-
-&#x20;                             +----------------------+
-
-&#x20;                             | Send Prediction      |
-
-&#x20;                             | Request              |
-
-&#x20;                             +----------------------+
-
-&#x20;                                     |
-
-&#x20;                                     v
-
-&#x20;                             +----------------------+
-
-&#x20;                             | Receive Prediction   |
-
-&#x20;                             +----------------------+
-
-&#x20;                                     |
-
-&#x20;                                     v
-
-&#x20;                             +----------------------+
-
-&#x20;                             | Human Activity       |
-
-&#x20;                             | Prediction           |
-
-&#x20;                             +----------------------+
 
