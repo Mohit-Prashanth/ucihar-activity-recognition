@@ -12,7 +12,7 @@ performance, and serving the trained model through an MLflow prediction service.
 
 
 
-!\[UCI HAR end-to-end pipeline flowchart](images/UCI pipeline flowchart.png)
+!\[UCI HAR end-to-end pipeline flowchart](images/UCI\_HAR\_End\_to\_End\_Pipeline.png)
 
 
 
