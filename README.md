@@ -1,7 +1,5 @@
 ## UCI HAR PROJECT - END-TO-END ML / MLOPS PIPELINE
 
-## ==================================================
-
 An end-to-end machine learning project for human activity recognition using the
 UCI Human Activity Recognition Using Smartphones dataset.
 
